@@ -1,0 +1,87 @@
+.boots-metabox-container .hndle {
+    background-color: #fafafa;
+}
+.boots-metabox h4 {
+    font-size: 1.3em;
+    margin-top: 42px;
+    padding: 14px;
+    background: url(../images/hr.png) repeat-x 0 0 #fafafa;
+}
+.boots-metabox > h4:first-child {
+    margin-top: 14px;
+}
+.boots-metabox > ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.boots-metabox > ul > li {
+    margin: 14px 0 0 0;
+    padding-top: 21px;
+    border-top: 1px solid #d7d7d7;
+}
+.boots-metabox > ul > li:first-child {
+    border: 0;
+    padding-top: 0;
+}
+/* Clearfix */
+.boots-metabox > ul > li:before,
+.boots-metabox > ul > li:after {
+    content:"";
+    display:table;
+}
+.boots-metabox > ul > li:after {
+    clear:both;
+}
+/* Clearfix IE 6/7 */
+.boots-metabox > ul > li {
+    zoom:1;
+}
+.boots-metabox > ul > li > label {
+    /*margin-top: 14px;*/
+}
+
+#postbox-container-2
+.boots-metabox {
+    padding: 21px;
+}
+#postbox-container-2
+.boots-metabox.boots-metabox-nosection {
+    padding-top: 0;
+}
+#postbox-container-2
+.boots-metabox > h4:first-child {
+    margin-top: 0;
+}
+#postbox-container-2
+.boots-metabox > ul > li {
+    margin: 21px;
+}
+#postbox-container-2
+.boots-metabox > ul > li:first-child {
+    padding-top: 21px;
+}
+#postbox-container-2
+.boots-metabox > ul > li > .boots-form-input {
+    float: left;
+    width: 40%;
+}
+#postbox-container-2
+.boots-metabox > ul > li > .boots-form-input-wide {
+    float: none;
+    width: 100%;
+}
+#postbox-container-2
+.boots-metabox > ul > li > p {
+    margin: 0 0 0 45%;
+    border: 0;
+}
+#postbox-container-2
+.boots-metabox > ul > li > .boots-form-input-wide + p {
+    margin: 14px 0 0 0;
+    border-top: 1px dashed #aaa;
+    border
+}
+
+
+
