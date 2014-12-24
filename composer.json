@@ -2,7 +2,7 @@
     "name": "boots/metabox",
     "type": "boots-extension",
     "description": "Create wordpress metaboxes in seconds.",
-    "keywords": ["boots","wordpress","admin","utility"],
+    "keywords": ["boots","wordpress","metabox","utility"],
     "homepage": "http://wpboots.com/extensions/metabox",
     "license": "GPLv2",
     "authors": [
