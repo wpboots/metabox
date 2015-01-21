@@ -5,7 +5,7 @@
  *
  * @package Boots
  * @subpackage Metabox
- * @version 1.0.0
+ * @version 1.0.1
  * @license GPLv2
  *
  * Boots - The missing WordPress framework. http://wpboots.com
@@ -178,9 +178,24 @@ class Boots_Metabox
         ? $field_or_cb
         : array($field_or_cb, $Args);
 
-        $this->Boxes[$id]['keys'] = isset($this->Boxes[$id]['keys'])
-        ? array_merge($this->Boxes[$id]['keys'], array($Args['name']))
-        : array($Args['name']);
+		if(!isset($Args['name']) && isset($Args['data']))
+		{
+			foreach($Args['data'] as $data)
+			{
+				if(is_array($data) && isset($data['name']))
+				{
+					$this->Boxes[$id]['keys'] = isset($this->Boxes[$id]['keys'])
+			        ? array_merge($this->Boxes[$id]['keys'], array($data['name']))
+			        : array($data['name']);
+				}
+			}
+		}
+		else
+		{
+        	$this->Boxes[$id]['keys'] = isset($this->Boxes[$id]['keys'])
+	        ? array_merge($this->Boxes[$id]['keys'], array($Args['name']))
+	        : array($Args['name']);
+		}
 
         return $this;
     }
@@ -317,6 +332,7 @@ class Boots_Metabox
             foreach(array_keys($_POST['boots_metabox']) as $metabox)
             {
                 $Post = apply_filters('boots_metabox_save_meta-' . $metabox, $Post);
+				//remove_all_filters('boots_metabox_save_meta-' . $metabox);
             }
         }
 
