@@ -39,6 +39,15 @@ foreach($Sections as $section => $Fields)
                 echo  "\n";
             }
             else { // its a form field
+				$Atts['value'] = !isset($Atts['value'])
+                ? $this->Boots->Database->term($Atts['name'])->get($Post->ID)
+                : $Atts['value'];
+                $Atts['id'] = !isset($Atts['id'])
+                ? (isset($Atts['name']) ? $Atts['name'] : null)
+                : $Atts['id'];
+                $Atts['name'] = isset($Atts['name'])
+                ? ('boots_metabox_' . $Atts['name'])
+                : $Atts['name'];
                 echo $this->Boots->Form->generate($type, $Atts) . "\n";
             }
             if($Requires) include $this->dir . '/requires.php';
@@ -72,6 +81,15 @@ foreach($Sections as $section => $Fields)
                         else echo '<i>' . $Atts . '</i> is not callable';
                     }
                     else { // its a form field
+						$Atts['value'] = !isset($Atts['value'])
+		                ? $this->Boots->Database->term($Atts['name'])->get($Post->ID)
+		                : $Atts['value'];
+		                $Atts['id'] = !isset($Atts['id'])
+		                ? (isset($Atts['name']) ? $Atts['name'] : null)
+		                : $Atts['id'];
+		                $Atts['name'] = isset($Atts['name'])
+		                ? ('boots_metabox_' . $Atts['name'])
+		                : $Atts['name'];
                         echo $this->Boots->Form->generate($type, $Atts);
                     }
                     echo '</div>' . "\n";
