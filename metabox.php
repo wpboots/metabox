@@ -2,49 +2,87 @@
 
 $count = count($this->Boxes[$id]['sections']);
 echo '<div class="boots-form boots-metabox' . ($count > 1 ? '' : ' boots-metabox-nosection') . '">';
-foreach($Sections as $section => $Values)
+foreach($Sections as $section => $Fields)
 {
-    $hr = '';
     echo $count > 1 ? ('<h4>' . $section . '</h4>') : '';
     echo '<ul>';
-    foreach($Values as $array_or_cb)
+    foreach($Fields as $group => $Arr)
     {
-        if(!is_array($array_or_cb))
-        {
-            echo '<li>';
-            call_user_func_array($array_or_cb, array($Post, $Args));
-        }
-        else
-        {
-            $type = array_shift($array_or_cb);
-            $A = array_shift($array_or_cb);
+        $type = isset($Arr['type'])
+        ? $Arr['type'] : null;
+        $Atts = isset($Arr['args'])
+        ? $Arr['args'] : null;
+        $Requires = isset($Arr['requires'])
+        ? $Arr['requires'] : array();
 
-            if(($type == 'checkboxes') || !isset($A['name']) && isset($A['data']) && is_array($A['data']))
+        if($Atts && !is_array($Atts)) // its a custom field
+        {
+            $uniqueid = uniqid('', true);
+            echo '<li data-id="' . $uniqueid . '">';
+            if(is_callable($Atts))
+            call_user_func($Atts);
+            else echo '<i>' . $Atts . '</i> is not callable';
+            if($Requires) include $this->dir . '/requires.php';
+            echo '</li>';
+        }
+        else if($type && $Atts) // its a single field
+        {
+            $uniqueid = uniqid(isset($Atts['name']) ? ($Atts['name'] . '-') : '', true);
+            echo '<li data-id="' . $uniqueid . '"';
+            echo $type == 'hidden'
+            ? ' style="display: none;">' : '>';
+            if($type == '_') // its a custom callable field
             {
-                foreach($A['data'] as & $Checkbox)
+                if(is_callable($Atts))
+                call_user_func($Atts);
+                else echo '<i>' . $Atts . '</i> is not callable';
+                echo  "\n";
+            }
+            else { // its a form field
+                echo $this->Boots->Form->generate($type, $Atts) . "\n";
+            }
+            if($Requires) include $this->dir . '/requires.php';
+            echo '</li>' . "\n";
+        }
+        else if(!$type) // its a group
+        {
+            $GroupProp = isset($Data['groups'][$group])
+            ? $Data['groups'][$group]
+            : array();
+            echo '<li>';
+            echo '<label>' . $group . '</label>';
+            foreach($Arr as $GroupArr)
+            {
+                $type = isset($GroupArr['type'])
+                ? $GroupArr['type'] : null;
+                $Atts = isset($GroupArr['args'])
+                ? $GroupArr['args'] : null;
+                $Requires = isset($GroupArr['requires'])
+                ? $GroupArr['requires'] : array();
+                if($type && $Atts)
                 {
-                    $Checkbox['id'] = !isset($Checkbox['id']) ? $Checkbox['name'] : $Checkbox['id'];
-                    $Checkbox['value'] = !isset($Checkbox['value'])
-                    ? $this->Boots->Database->term($Checkbox['name'])->get($Post->ID)
-                    : $Checkbox['value'];
-                    $Checkbox['name'] = 'boots_metabox_' . $Checkbox['name'] . '';
+                    $uniqueid = uniqid(isset($Atts['name']) ? ($Atts['name'] . '-') : '', true);
+                    echo '<div data-id="' . $uniqueid . '" class="boots-form-group"';
+                    echo $type == 'hidden'
+                    ? ' style="display: none;">' : '>';
+                    if($type == '_') // its a custom callable field
+                    {
+                        if(is_callable($Atts))
+                        call_user_func($Atts);
+                        else echo '<i>' . $Atts . '</i> is not callable';
+                    }
+                    else { // its a form field
+                        echo $this->Boots->Form->generate($type, $Atts);
+                    }
+                    echo '</div>' . "\n";
+                    if($Requires) include $this->dir . '/requires.php';
                 }
             }
-            else
-            {
-                $A['id'] = !isset($A['id']) ? $A['name'] : $A['id'];
-                $A['value'] = !isset($A['value'])
-                ? $this->Boots->Database->term($A['name'])->get($Post->ID)
-                : $A['value'];
-                //preg_match('^/boots_metabox\[(.*?)\]$/', $A['name'], $HiddenBoots);
-                $A['name'] = ($type == 'hidden' && preg_match('/^boots_metabox\[.*?\]$/', $A['name']))
-                ? $A['name'] : 'boots_metabox_' . $A['name'] . '';
-            }
-
-            echo '<li' . ($type == 'hidden' ? ' style="display: none;"' : '') . '>';
-            echo $this->Boots->Form->generate($type, $A);
+            echo isset($GroupProp['help'])
+            ? ('<p>' . $GroupProp['help'] . '</p>')
+            : '';
+            echo '</li>' . "\n";
         }
-        echo '</li>';
     }
     echo '</ul>';
 }

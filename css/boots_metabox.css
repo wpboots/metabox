@@ -62,26 +62,29 @@
     padding-top: 21px;
 }
 #postbox-container-2
-.boots-metabox > ul > li > .boots-form-input {
+.boots-metabox > ul > li .boots-form-input {
     float: left;
     width: 40%;
 }
 #postbox-container-2
-.boots-metabox > ul > li > .boots-form-input-wide {
+.boots-metabox > ul > li .boots-form-input-wide {
     float: none;
     width: 100%;
 }
 #postbox-container-2
-.boots-metabox > ul > li > p {
+.boots-metabox > ul > li .boots-form-input + p {
     margin: 0 0 0 45%;
     border: 0;
 }
 #postbox-container-2
-.boots-metabox > ul > li > .boots-form-input-wide + p {
+.boots-metabox > ul > li .boots-form-input-wide + p {
     margin: 14px 0 0 0;
     border-top: 1px dashed #aaa;
     border
 }
-
-
-
+#postbox-container-2
+.boots-metabox > ul > li .boots-form-group {
+    display: block;
+    clear: both;
+    margin-top: 30px;
+}

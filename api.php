@@ -158,7 +158,7 @@ class Boots_Metabox
         return $this;
     }
 
-    public function add($field_or_cb, $Args = array())
+    public function add($field_str, $Args = array(), $Extras = null)
     {
         if(!$this->id)
         {
@@ -174,6 +174,113 @@ class Boots_Metabox
         $id = $this->id;
         $section = $this->section;
 
+        if(is_array($field_str))
+        {
+            $Extras = $Args;
+        }
+
+        $group = false;
+        $Requires = array();
+        if($Extras !== null)
+        {
+            if(!is_array($Extras))
+            {
+                $group = $Extras;
+            }
+            else
+            {
+                $group = isset($Extras['group'])
+                ? $Extras['group'] : false;
+                $Requires = isset($Extras['requires'])
+                ? $Extras['requires'] : array();
+            }
+        }
+
+        //
+        $Keys = array();
+
+        if(is_array($field_str))
+        {
+            foreach($field_str as $Field)
+            {
+                if(!is_array($Field) || (!isset($Field['_'])))
+                {
+                    if($group !== false)
+                    {
+                        $this->Boxes[$id]['sections'][$section][$group][] = array(
+                            'type' => '_',
+                            'args' => $Field,
+                            'requires' => $Requires
+                        );
+                    }
+                    else
+                    {
+                        $this->Boxes[$id]['sections'][$section][] = array(
+                            'type' => '_',
+                            'args' => $Field,
+                            'requires' => $Requires
+                        );
+                    }
+                    if(isset($Field['name']))
+                    $Keys[] = $Field['name'];
+                }
+                else
+                {
+                    $f = $Field['_'];
+                    unset($Field['_']);
+                    $args = $Field;
+                    if($group !== false)
+                    {
+                        $this->Boxes[$id]['sections'][$section][$group][] = array(
+                            'type' => $f,
+                            'args' => $args,
+                            'requires' => $Requires
+                        );
+                    }
+                    else
+                    {
+                        $this->Boxes[$id]['sections'][$section][] = array(
+                            'type' => $f,
+                            'args' => $args,
+                            'requires' => $Requires
+                        );
+                    }
+                    if(isset($args['name']))
+                    $Keys[] = $args['name'];
+                }
+            }
+        }
+        else
+        {
+            if($group !== false)
+            {
+                $this->Boxes[$id]['sections'][$section][$group][] = array(
+                    'type' => $field_str,
+                    'args' => $Args,
+                    'requires' => $Requires
+                );
+            }
+            else
+            {
+                $this->Boxes[$id]['sections'][$section][] = array(
+                    'type' => $field_str,
+                    'args' => $Args,
+                    'requires' => $Requires
+                );
+            }
+            if(isset($Args['name']))
+            $Keys[] = $Args['name'];
+        }
+
+        $this->Boxes[$id]['keys'] = isset($this->Boxes[$id]['keys'])
+        ? array_merge($this->Boxes[$id]['keys'], $Keys)
+        : $Keys;
+
+        return $this;
+
+        //
+
+        /*
         $this->Boxes[$id]['sections'][$section][] = is_callable($field_or_cb)
         ? $field_or_cb
         : array($field_or_cb, $Args);
@@ -197,7 +304,7 @@ class Boots_Metabox
 	        : array($Args['name']);
 		}
 
-        return $this;
+        return $this;*/
     }
 
     // post_type: 'post', 'page', 'dashboard', 'link', 'attachment' or 'custom_post_type'
