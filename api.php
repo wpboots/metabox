@@ -5,7 +5,7 @@
  *
  * @package Boots
  * @subpackage Metabox
- * @version 1.0.1
+ * @version 1.0.4
  * @license GPLv2
  *
  * Boots - The missing WordPress framework. http://wpboots.com
@@ -427,21 +427,29 @@ class Boots_Metabox
             {
                 $Post[$Key[1]] = $v;
             }
-            $Key = array();
-            if(preg_match('/^boots_metabox$/', $k, $Key))
+        }
+
+        if(
+            isset($Post['boots_metabox'])
+            && is_array($Post['boots_metabox'])
+        )
+        {
+            $Metaboxes = $Post['boots_metabox'];
+            unset($Post['boots_metabox']);
+
+            foreach($Metaboxes as $metabox => $keys)
             {
-                $Filters[] = $Key[0];
+                $Fields = explode(':', $keys);
+                $Filter = array();
+                foreach($Fields as $field)
+                {
+                    $Filter[$field] = isset($Post[$field]) ? $Post[$field] : false;
+                }
+                $Post = apply_filters('boots_metabox_save_meta-' . $metabox, $Filter);
             }
         }
 
-        if(isset($_POST['boots_metabox']) && is_array($_POST['boots_metabox']))
-        {
-            foreach(array_keys($_POST['boots_metabox']) as $metabox)
-            {
-                $Post = apply_filters('boots_metabox_save_meta-' . $metabox, $Post);
-				//remove_all_filters('boots_metabox_save_meta-' . $metabox);
-            }
-        }
+        if(!is_array($Post)) return $post_id;
 
         foreach($Post as $term => $value)
         {

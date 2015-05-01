@@ -42,6 +42,9 @@ foreach($Sections as $section => $Fields)
 				$Atts['value'] = !isset($Atts['value'])
                 ? $this->Boots->Database->term($Atts['name'])->get($Post->ID)
                 : $Atts['value'];
+				$Atts['checked'] = !isset($Atts['checked'])
+                ? $Atts['value'] == $this->Boots->Database->term($Atts['name'])->get($Post->ID)
+                : $Atts['checked'];
                 $Atts['id'] = !isset($Atts['id'])
                 ? (isset($Atts['name']) ? $Atts['name'] : null)
                 : $Atts['id'];
@@ -84,6 +87,9 @@ foreach($Sections as $section => $Fields)
 						$Atts['value'] = !isset($Atts['value'])
 		                ? $this->Boots->Database->term($Atts['name'])->get($Post->ID)
 		                : $Atts['value'];
+						$Atts['checked'] = !isset($Atts['checked'])
+		                ? $Atts['value'] == $this->Boots->Database->term($Atts['name'])->get($Post->ID)
+		                : $Atts['checked'];
 		                $Atts['id'] = !isset($Atts['id'])
 		                ? (isset($Atts['name']) ? $Atts['name'] : null)
 		                : $Atts['id'];
