@@ -4,7 +4,7 @@
     var conds = [
         <?php $_comma = ''; foreach($Requires as $rf => $rv) : ?>
         <?php echo $_comma; ?>{
-            el : '<?php echo $rf; ?>',
+            el : 'boots_metabox_' + '<?php echo $rf; ?>',
             val : '<?php echo $rv; ?>'
         }
         <?php $_comma = ', '; endforeach; ?>
