@@ -5,7 +5,7 @@
  *
  * @package Boots
  * @subpackage Metabox
- * @version 1.0.4
+ * @version 1.0.5
  * @license GPLv2
  *
  * Boots - The missing WordPress framework. http://wpboots.com
@@ -30,8 +30,7 @@
 
 // see http://codex.wordpress.org/Function_Reference/add_meta_box
 
-class Boots_Metabox
-{
+class Boots_Metabox {
     private $Boots;
     private $Settings;
     private $dir;
@@ -58,7 +57,7 @@ class Boots_Metabox
         if(!has_action('admin_enqueue_scripts', array(&$this, 'scripts_and_styles')))
             add_action('admin_enqueue_scripts', array(&$this, 'scripts_and_styles'));
         if(!has_action('save_post', array(&$this, 'save')))
-            add_action('save_post', array(&$this, 'save'));
+            add_action('save_post', array(&$this, 'save'), PHP_INT_MAX);
     }
 
     public function scripts_and_styles($hook)
@@ -277,34 +276,6 @@ class Boots_Metabox
         : $Keys;
 
         return $this;
-
-        //
-
-        /*
-        $this->Boxes[$id]['sections'][$section][] = is_callable($field_or_cb)
-        ? $field_or_cb
-        : array($field_or_cb, $Args);
-
-		if(!isset($Args['name']) && isset($Args['data']))
-		{
-			foreach($Args['data'] as $data)
-			{
-				if(is_array($data) && isset($data['name']))
-				{
-					$this->Boxes[$id]['keys'] = isset($this->Boxes[$id]['keys'])
-			        ? array_merge($this->Boxes[$id]['keys'], array($data['name']))
-			        : array($data['name']);
-				}
-			}
-		}
-		else
-		{
-        	$this->Boxes[$id]['keys'] = isset($this->Boxes[$id]['keys'])
-	        ? array_merge($this->Boxes[$id]['keys'], array($Args['name']))
-	        : array($Args['name']);
-		}
-
-        return $this;*/
     }
 
     // post_type: 'post', 'page', 'dashboard', 'link', 'attachment' or 'custom_post_type'
@@ -436,22 +407,22 @@ class Boots_Metabox
         {
             $Metaboxes = $Post['boots_metabox'];
             unset($Post['boots_metabox']);
-
             foreach($Metaboxes as $metabox => $keys)
             {
+                $PostData = array();
                 $Fields = explode(':', $keys);
                 $Filter = array();
                 foreach($Fields as $field)
                 {
                     $Filter[$field] = isset($Post[$field]) ? $Post[$field] : false;
                 }
-                $Post = apply_filters('boots_metabox_save_meta-' . $metabox, $Filter);
+                $PostData = array_merge($PostData, apply_filters('boots_metabox_save_meta-' . $metabox, $Filter));
             }
         }
 
-        if(!is_array($Post)) return $post_id;
+        if(!is_array($PostData)) return $post_id;
 
-        foreach($Post as $term => $value)
+        foreach($PostData as $term => $value)
         {
 			$this->Boots->Database
 				->term($term)
