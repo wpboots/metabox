@@ -5,7 +5,7 @@
  *
  * @package Boots
  * @subpackage Metabox
- * @version 1.0.5
+ * @version 1.0.7
  * @license GPLv2
  *
  * Boots - The missing WordPress framework. http://wpboots.com
